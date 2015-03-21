@@ -4,6 +4,13 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import io.orchestrate.client.Client;
+import io.orchestrate.client.KvObject;
+import io.orchestrate.client.OrchestrateClient;
+import io.orchestrate.client.ResponseAdapter;
+import project.hackmty.partypig.models.User;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -12,6 +19,36 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Client client = OrchestrateClient.builder("6af7467f-116e-4031-ad8c-0b8d743dcc5e")
+                .build();
+
+
+        client.kv("users", "1234")
+                .get(User.class)
+                .on(new ResponseAdapter<KvObject<User>>() {
+                    @Override
+                    public void onFailure(final Throwable error) {
+                        // handle errors
+                    }
+
+                    @Override
+                    public void onSuccess(final KvObject<User> object) {
+                        if (object == null) {
+                            // we received a 404, no KV object exists
+                            Toast.makeText(getApplicationContext(),"No encontro", Toast.LENGTH_SHORT).show();
+                        }
+
+                       User data = object.getValue();
+
+
+                        // do something with the 'data'
+                        Toast.makeText(getApplicationContext(), data.getUserId(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
+
     }
 
 
