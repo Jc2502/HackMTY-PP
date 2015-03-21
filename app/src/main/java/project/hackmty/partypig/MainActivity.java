@@ -6,11 +6,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import io.orchestrate.client.Client;
-import io.orchestrate.client.KvObject;
-import io.orchestrate.client.OrchestrateClient;
-import io.orchestrate.client.ResponseAdapter;
-import project.hackmty.partypig.models.User;
+import com.parse.Parse;
+import com.parse.ParseObject;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -20,33 +17,17 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Client client = OrchestrateClient.builder("6af7467f-116e-4031-ad8c-0b8d743dcc5e")
-                .build();
+        Parse.enableLocalDatastore(this);
+        Parse.initialize(this, "C5WL7pQmVGOnQ8Ln3WF4XWEauewoYXMpaqjLF16W", "p2CACiv46kfEhqKnsKGsfGcErgXsQ02XeK5xffmn");
+
+        ParseObject testObject = new ParseObject("User");
+        testObject.put("userId", "123456");
+        testObject.saveInBackground();
 
 
-        client.kv("users", "1234")
-                .get(User.class)
-                .on(new ResponseAdapter<KvObject<User>>() {
-                    @Override
-                    public void onFailure(final Throwable error) {
-                        // handle errors
-                    }
-
-                    @Override
-                    public void onSuccess(final KvObject<User> object) {
-                        if (object == null) {
-                            // we received a 404, no KV object exists
-                            Toast.makeText(getApplicationContext(),"No encontro", Toast.LENGTH_SHORT).show();
-                        }
-
-                       User data = object.getValue();
-
-
-                        // do something with the 'data'
-                        Toast.makeText(getApplicationContext(), data.getUserId(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-
+        ParseObject testObject2 = new ParseObject("User");
+        testObject2.put("userId", "654321");
+        testObject2.saveInBackground();
 
 
     }
