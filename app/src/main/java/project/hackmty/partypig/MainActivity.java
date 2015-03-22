@@ -1,36 +1,40 @@
 package project.hackmty.partypig;
 
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.facebook.AppEventsLogger;
 import com.parse.Parse;
 import com.parse.ParseObject;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends FragmentActivity {
+
+    private MainFragment mainFragment;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        Parse.enableLocalDatastore(this);
-        Parse.initialize(this, "C5WL7pQmVGOnQ8Ln3WF4XWEauewoYXMpaqjLF16W", "p2CACiv46kfEhqKnsKGsfGcErgXsQ02XeK5xffmn");
-
-        ParseObject testObject = new ParseObject("User");
-        testObject.put("userId", "123456");
-        testObject.saveInBackground();
-
-
-        ParseObject testObject2 = new ParseObject("User");
-        testObject2.put("userId", "654321");
-        testObject2.saveInBackground();
-
-
+        if (savedInstanceState == null) {
+            // Add the fragment on initial activity setup
+            mainFragment = new MainFragment();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(android.R.id.content, mainFragment)
+                    .commit();
+        } else {
+            // Or set the fragment from restored state info
+            mainFragment = (MainFragment) getSupportFragmentManager()
+                    .findFragmentById(android.R.id.content);
+        }
     }
+
 
 
     @Override
@@ -39,6 +43,23 @@ public class MainActivity extends ActionBarActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Logs 'install' and 'app activate' App Events.
+        AppEventsLogger.activateApp(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // Logs 'app deactivate' App Event.
+        AppEventsLogger.deactivateApp(this);
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

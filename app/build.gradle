@@ -26,6 +26,7 @@ dependencies {
     dependencies {
         compile 'com.parse.bolts:bolts-android:1.+'
         compile fileTree(dir: 'libs', include: 'Parse-*.jar')
+        compile 'com.facebook.android:facebook-android-sdk:3.23.+'
     }
 
 }
